@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "org",
+  "lastUpdated": "2025-12-31T23:59:59.999+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": "1999-01-02T03:04:05Z",
+      "dataHash": "aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBBccccccccccccccccDDDDDDDDDDDDDDDD"
+    },
+    {
+      "dateTime": "2000-05-04T03:02:01Z",
+      "dataHash": "FFFFFFFFFFFFFFFFeeeeeeeeeeeeeeeeDDDDDDDDDDDDDDDDcccccccccccccccc"
+    }
+  ],
+  "contents": [
+    {
+      "title": "ORG-TITLE",
+      "artist": "ORG-ARTIST",
+      "dpMode": true,
+      "levelIndex": 1,
+      "bodyUrl": "http://example.com/org-body.zip",
+      "additionalUrl": "http://example.com/org-add.zip",
+      "md5": "1111111111111111FFFFFFFFFFFFFFFF",
+      "sha256": "ffffffffffffffffffffffffffffffff22222222222222222222222222222222"
+    }
+  ]
+}

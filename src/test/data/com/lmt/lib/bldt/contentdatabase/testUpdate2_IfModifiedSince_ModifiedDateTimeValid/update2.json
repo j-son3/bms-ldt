@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "id": "update2",
+  "lastUpdated": "2025-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": null,
+      "dataHash": null
+    },
+    {
+      "dateTime": "2025-07-08T09:10:11.120Z",
+      "dataHash": null
+    }
+  ],
+  "contents": [
+  ]
+}

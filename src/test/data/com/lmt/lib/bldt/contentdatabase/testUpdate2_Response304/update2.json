@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "update2",
+  "lastUpdated": "2025-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": null,
+      "dataHash": null
+    },
+    {
+      "dateTime": null,
+      "dataHash": null
+    }
+  ],
+  "contents": [
+    {
+      "title": "A1",
+      "artist": "B",
+      "dpMode": false,
+      "levelIndex": 0,
+      "bodyUrl": "http://example.com/body.zip",
+      "additionalUrl": "http://example.com/add.zip",
+      "md5": "00000000000000000000000000000000",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

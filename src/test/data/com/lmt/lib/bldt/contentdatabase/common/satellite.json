@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "id": "satellite",
+  "lastUpdated": "2025-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": "2025-02-03T04:05:06Z",
+      "dataHash": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    {
+      "dateTime": "2025-03-04T05:06:07Z",
+      "dataHash": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "contents": [
+    {
+      "title": "Favorite Music",
+      "artist": "Mr.X",
+      "dpMode": false,
+      "levelIndex": 1,
+      "bodyUrl": "http://example.com/body-fm.zip",
+      "additionalUrl": "http://example.com/add-fm.zip",
+      "md5": "00000000000000000000000000000000",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "title": "My Song SP",
+      "artist": "Mr.Z",
+      "dpMode": false,
+      "levelIndex": 3,
+      "bodyUrl": "http://example.com/body-ms.zip",
+      "additionalUrl": "http://example.com/add-ms-sp.zip",
+      "md5": "11111111111111111111111111111111",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "title": "My Song DP",
+      "artist": "Mr.Z / obj:Mr.J",
+      "dpMode": true,
+      "levelIndex": 2,
+      "bodyUrl": "http://example.com/body-ms.zip",
+      "additionalUrl": "http://example.com/add-ms-dp.zip",
+      "md5": "22222222222222222222222222222222",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ]
+}

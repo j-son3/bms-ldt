@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "id": "satellite",
+  "lastUpdated": "2025-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": "2025-02-03T04:05:06Z",
+      "dataHash": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "dateTime": "2025-03-04T05:06:07Z",
+      "dataHash": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "contents": [
+    {
+      "title": "A1",
+      "artist": "B",
+      "dpMode": false,
+      "levelIndex": 0,
+      "bodyUrl": null,
+      "additionalUrl": null,
+      "md5": null,
+      "sha256": null
+    },
+    {
+      "title": "A2",
+      "artist": "B",
+      "dpMode": false,
+      "levelIndex": 99,
+      "bodyUrl": null,
+      "additionalUrl": null,
+      "md5": null,
+      "sha256": null
+    }
+  ]
+}

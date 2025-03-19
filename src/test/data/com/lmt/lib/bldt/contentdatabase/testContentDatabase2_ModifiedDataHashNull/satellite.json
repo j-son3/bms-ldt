@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "satellite",
+  "lastUpdated": "2025-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": "2025-02-03T04:05:06Z",
+      "dataHash": null
+    },
+    {
+      "dateTime": "2025-03-04T05:06:07Z",
+      "dataHash": null
+    }
+  ],
+  "contents": [
+    {
+      "title": "A",
+      "artist": "B",
+      "dpMode": false,
+      "levelIndex": 0,
+      "bodyUrl": "http://example.com/body.zip",
+      "additionalUrl": "http://example.com/add.zip",
+      "md5": "00000000000000000000000000000000",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

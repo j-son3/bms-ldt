@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": "update2",
+  "lastUpdated": "1999-01-02T03:04:05.600+09:00[Asia/Tokyo]",
+  "modified": [
+    {
+      "dateTime": "1999-01-01T00:00:00.000Z",
+      "dataHash": "00000000ffffffff11111111eeeeeeee22222222dddddddd33333333cccccccc"
+    },
+    {
+      "dateTime": "1999-01-01T00:00:00.000Z",
+      "dataHash": "00000000ffffffff11111111eeeeeeee22222222dddddddd33333333cccccccc"
+    }
+  ],
+  "contents": [
+    {
+      "title": "?",
+      "artist": "?",
+      "dpMode": true,
+      "levelIndex": 0,
+      "bodyUrl": "http://example.com/body-before.zip",
+      "additionalUrl": "http://example.com/add-before.zip",
+      "md5": "00000000000000000000000000000000",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+  ]
+}
