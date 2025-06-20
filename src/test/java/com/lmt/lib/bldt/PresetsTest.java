@@ -217,8 +217,28 @@ public class PresetsTest {
 		assertEquals(new URL("https://egret9.github.io/Scramble/"), desc.getOfficialUrl());
 		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
 		assertEquals("SB", sp.getSymbol());
-		assertEquals(new URL("https://script.googleusercontent.com/macros/echo?user_content_key=72AslfXfnDVPl2xR_ro34gTO9miawxQSMOZZAwbnTciUjRA4UG0TM8xU0B6jW9Q4fH9ouDZq38f2SxY9oNfq1HGVhenIYl91m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDOIBaQaGJdmfuAp5Zs8JpY-HzONlLC1YMTUBRlrKMtW6-Ub5EOlNPxPK0-F6kNGkKolkx-2CTIsYRVq0FucQLuhAno_z6HXx9z9Jw9Md8uu&lib=M38ocjsuD4rIWdjxt2NeMqkH8y3I0fmjq"), sp.getContentUrl());
+		assertEquals(new URL("https://script.google.com/macros/s/AKfycbw5pnMwlCFZz7wDY5kRsBpfSm0-luKszs8LQAEE6BKkVT1R78-CpB4WA9chW-gdBsF7IA/exec"), sp.getContentUrl());
 		assertEquals(List.of("-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
+		assertNull(dp);
+	}
+
+	// 癖譜面ライブラリー：難易度表定義が期待通りであること
+	@Test
+	public void testUnique() throws Exception {
+		var preset = Presets.UNIQUE;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("unique", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://rattoto10.web.fc2.com/kuse_library/main.html"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("癖", sp.getSymbol());
+		assertEquals(new URL("https://rattoto10.web.fc2.com/kuse_library/score.json"), sp.getContentUrl());
+		assertEquals(List.of("0", "1" ,"2" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9" , "10", "11", "12", "13", "14", "15",
+				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "51",
+				"52", "53", "54", "55", "56", "99"), sp.getLabels());
 		assertNull(dp);
 	}
 }

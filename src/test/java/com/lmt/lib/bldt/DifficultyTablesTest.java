@@ -197,6 +197,7 @@ public class DifficultyTablesTest {
 		assertEquals("Overjoy", Presets.OVERJOY.getTableDescription().getName());
 		assertEquals("LN", Presets.LONG_NOTE.getTableDescription().getName());
 		assertEquals("Scramble", Presets.SCRAMBLE.getTableDescription().getName());
+		assertEquals("癖譜面ライブラリー", Presets.UNIQUE.getTableDescription().getName());
 	}
 
 	// setLocale(Locale)
@@ -215,6 +216,7 @@ public class DifficultyTablesTest {
 		assertEquals("Overjoy", Presets.OVERJOY.getTableDescription().getName());
 		assertEquals("LN", Presets.LONG_NOTE.getTableDescription().getName());
 		assertEquals("Scramble", Presets.SCRAMBLE.getTableDescription().getName());
+		assertEquals("버릇 악보 라이브러리", Presets.UNIQUE.getTableDescription().getName());
 	}
 
 	// setLocale(Locale)
@@ -236,6 +238,7 @@ public class DifficultyTablesTest {
 			assertEquals("Overjoy", Presets.OVERJOY.getTableDescription().getName());
 			assertEquals("LN", Presets.LONG_NOTE.getTableDescription().getName());
 			assertEquals("Scramble", Presets.SCRAMBLE.getTableDescription().getName());
+			assertEquals("Unique Chart Library", Presets.UNIQUE.getTableDescription().getName());
 		} finally {
 			Locale.setDefault(loc);
 		}

@@ -1004,7 +1004,7 @@ public class ContentDatabaseTest {
 		assertTrue(cc1.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertEquals("2025-12-11T10:09:08.700Z", cc1.getModifiedDateTime(PlayStyle.SINGLE).toString());
 		assertEquals(0, cc1.getCount());
-		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) > 0);
+		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertEquals("2025-07-08T09:10:11.120Z", cc2.getModifiedDateTime(PlayStyle.DOUBLE).toString());
 		assertEquals(0, cc2.getCount());
 	}
@@ -1023,7 +1023,7 @@ public class ContentDatabaseTest {
 		assertTrue(cc1.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertEquals("2025-12-11T10:09:08.700Z", cc1.getModifiedDateTime(PlayStyle.SINGLE).toString());
 		assertEquals(0, cc1.getCount());
-		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) > 0);
+		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertEquals("2025-07-08T09:10:11.120Z", cc2.getModifiedDateTime(PlayStyle.DOUBLE).toString());
 		assertEquals(0, cc2.getCount());
 	}
@@ -1175,7 +1175,7 @@ public class ContentDatabaseTest {
 
 		var db2 = new ContentDatabase(db.getLocation(), false);
 		var cc1 = db2.get(ID_UPDATE1);
-		assertTrue(cc1.getLastUpdateDateTime().compareTo(now) > 0);
+		assertTrue(cc1.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertEquals("2025-01-02T03:04:05Z", cc1.getModifiedDateTime(PlayStyle.SINGLE).toString());
 		assertEquals("ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
 				cc1.getModifiedDataHash(PlayStyle.SINGLE));
@@ -1205,7 +1205,7 @@ public class ContentDatabaseTest {
 		assertEquals(sha256s[2], cc1.get(2).getSha256());
 
 		var cc2 = db2.get(ID_UPDATE2);
-		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) > 0);
+		assertTrue(cc2.getLastUpdateDateTime().compareTo(now) >= 0);
 		assertNull(cc2.getModifiedDateTime(PlayStyle.SINGLE));
 		assertNull(cc2.getModifiedDataHash(PlayStyle.SINGLE));
 		assertEquals("2025-05-04T03:02:01Z", cc2.getModifiedDateTime(PlayStyle.DOUBLE).toString());

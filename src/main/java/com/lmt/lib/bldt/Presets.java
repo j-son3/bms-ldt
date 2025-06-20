@@ -170,8 +170,25 @@ public enum Presets {
 			"https://egret9.github.io/Scramble/",
 			new ScoreJsonParser(),
 			"SB",
-			"https://script.googleusercontent.com/macros/echo?user_content_key=72AslfXfnDVPl2xR_ro34gTO9miawxQSMOZZAwbnTciUjRA4UG0TM8xU0B6jW9Q4fH9ouDZq38f2SxY9oNfq1HGVhenIYl91m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnDOIBaQaGJdmfuAp5Zs8JpY-HzONlLC1YMTUBRlrKMtW6-Ub5EOlNPxPK0-F6kNGkKolkx-2CTIsYRVq0FucQLuhAno_z6HXx9z9Jw9Md8uu&lib=M38ocjsuD4rIWdjxt2NeMqkH8y3I0fmjq",
+			"https://script.google.com/macros/s/AKfycbw5pnMwlCFZz7wDY5kRsBpfSm0-luKszs8LQAEE6BKkVT1R78-CpB4WA9chW-gdBsF7IA/exec",
 			List.of("-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
+			null,
+			null,
+			null),
+	/**
+	 * 癖譜面ライブラリー
+	 * @since 0.1.1
+	 */
+	UNIQUE(
+			"unique",
+			"https://rattoto10.web.fc2.com/kuse_library/main.html",
+			new ScoreJsonParser(),
+			"癖",
+			"https://rattoto10.web.fc2.com/kuse_library/score.json",
+			List.of("0", "1" ,"2" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9" ,
+					"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+					"20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+					"30", "31", "51", "52", "53", "54", "55", "56", "99"),
 			null,
 			null,
 			null);

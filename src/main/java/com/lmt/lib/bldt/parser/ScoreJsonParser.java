@@ -50,7 +50,14 @@ public class ScoreJsonParser implements Parser {
 		// 入力されるJSONはUTF-8でエンコードされていることを前提とする
 		var jsonContents = (JSONArray)null;
 		try {
-			var jsonStr = new String(raw, StandardCharsets.UTF_8);
+			var jsonStr = "";
+			if ((raw.length >= 3) && (raw[0] == (byte)0xef) && (raw[1] == (byte)0xbb) && (raw[2] == (byte)0xbf)) {
+				// UTF-8のBOMがある場合はBOMを読み飛ばして文字列をデコードする
+				jsonStr = new String(raw, 3, raw.length - 3, StandardCharsets.UTF_8);
+			} else {
+				// BOMなしの場合はバイトデータ全体をデコードする
+				jsonStr = new String(raw, StandardCharsets.UTF_8);
+			}
 			jsonContents = new JSONArray(jsonStr);
 		} catch (JSONException e) {
 			// 楽曲情報リストの開始と終了を検知できなかった場合は解析エラーとする
