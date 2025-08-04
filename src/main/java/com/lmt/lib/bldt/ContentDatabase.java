@@ -229,6 +229,74 @@ public class ContentDatabase {
 	}
 
 	/**
+	 * 難易度表データベースの更新を行います。
+	 * <p>当メソッドを実行すると、{@link DifficultyTables#all()} で取得できる全ての難易度表定義を使用し、
+	 * 楽曲情報のダウンロード～難易度表情報ファイルの更新を行います。</p>
+	 * <p>更新処理が開始されると難易度表データベースは読み書きの両方がロックされ、同データベースの読み込みと更新の
+	 * 両方が排他状態となります。その間、同データベースでの難易度表データベースオブジェクト構築、
+	 * および当メソッドの他プロセス・スレッドからの呼び出しは全て失敗します。</p>
+	 * <p>当メソッドではインターネット経由でHTTP通信を行い、楽曲情報のダウンロードを行います。
+	 * 通信設定は引数のHTTPクライアントオブジェクトを通して予め実施しておいてください。
+	 * (例えば、プロキシの仕様有無やリダイレクトフォローなど)</p>
+	 * <p>楽曲情報のダウンロードでは、最初にダウンロード対象データの更新日時を検証します。
+	 * データが更新されておらず更新日時に変化がない場合は前回の更新からデータ差分がないと見なしダウンロードを中止します。
+	 * データをダウンロード後、前回更新時のデータとの比較を行い、同じデータと判定された場合は更新処理を中止します。</p>
+	 * <p>ダウンロードされたデータは難易度表定義に登録されたパーサ({@link Parser})を使用して楽曲情報が解析され、
+	 * その結果が難易度表情報ファイルに記録され、メモリ上の楽曲情報も同様の内容に更新されます。</p>
+	 * <p>当メソッドは登録済みの全ての難易度表を更新しようとするため、処理完了までに非常に時間がかかります。
+	 * 更新処理は別スレッドを使用した並列処理とすることを推奨します。当メソッド実行中はスレッドの割り込みを監視し、
+	 * 割り込みを検出した時に処理を中止し InterruptedException をスローします。その場合、処理中だった難易度表は
+	 * 難易度表情報ファイルには保存されず、割り込み検出以前の更新結果が更新前に戻ることはありません。</p>
+	 * <p>当メソッドではスレッドの割り込み検出と入力パラメータ不備、および状態エラーの場合を除き、
+	 * 更新途中で実行時例外がスローされても更新は停止されません。難易度表ごとの更新結果は入力パラメータ
+	 * results のマップに格納されますので、必要に応じて参照するようにしてください。このマップのキーは難易度表IDです。</p>
+	 * <p>難易度表ごとに個別に更新を行いたい場合は {@link #update(HttpClient, String, Duration, UpdateProgress)}
+	 * を使用してください。</p>
+	 * @param client HTTP通信に使用するクライアントオブジェクト
+	 * @param timeout 楽曲情報データダウンロード時のサーバー応答タイムアウト。null の場合タイムアウトなし。
+	 * @param progress 更新処理の進捗情報を報告するハンドラオブジェクト
+	 * @param results 更新処理の結果を格納するマップ
+	 * @throws NullPointerException client が null
+	 * @throws NullPointerException progress が null
+	 * @throws NullPointerException results が null
+	 * @throws UnsupportedOperationException results が変更不可のマップ
+	 * @throws InterruptedException スレッド割り込みによる更新処理の中止が発生した
+	 * @throws IllegalStateException 読み書き排他処理エラーが発生した
+	 * @since 0.2.0
+	 */
+	public void update(HttpClient client, Duration timeout, UpdateProgress progress, Map<String, UpdateResult> results)
+			throws InterruptedException {
+		assertArgNotNull(client, "client");
+		assertArgNotNull(progress, "progress");
+		assertArgNotNull(results, "results");
+		results.clear();
+		try {
+			lock(true, true);
+			var tableDescs = DifficultyTables.all().collect(Collectors.toList());
+			var numDesc = tableDescs.size();
+			for (var i = 0; i < numDesc; i++) {
+				var td = tableDescs.get(i);
+				try {
+					// 指定した難易度表の更新を実行する
+					processUpdate(client, td, i, numDesc, timeout, progress);
+					results.put(td.getId(), new UpdateResult(UpdateResult.Type.SUCCESS));
+				} catch (InterruptedException e) {
+					// スレッド割り込みを検知した場合は未更新分の難易度表の結果を全て「中止」とする
+					for (var j = i; j < numDesc; j++) {
+						results.put(tableDescs.get(j).getId(), new UpdateResult(UpdateResult.Type.ABORT));
+					}
+					throw e;
+				} catch (Exception e) {
+					// エラーが発生した場合はその難易度表の結果を「エラー」とする
+					results.put(td.getId(), new UpdateResult(e));
+				}
+			}
+		} finally {
+			unlock(true, true);
+		}
+	}
+
+	/**
 	 * HTTPのリクエスト送受信
 	 * @param client HTTPクライアントオブジェクト
 	 * @param request リクエスト内容
@@ -291,7 +359,7 @@ public class ContentDatabase {
 					// 該当するファイルが存在しない、またはファイルとして読み込めない場合はスキップ
 					printLog("Skip load because database file is not found: Path='%s'", contentFilePath);
 					var emptyCollection = new ContentCollection(
-							tableDesc, ZonedDateTime.now(), null, null, null, null, contents);
+							tableDesc, null, null, null, null, null, contents);
 					mCollections.put(id, emptyCollection);
 					continue;
 				}

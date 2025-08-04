@@ -25,6 +25,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1257,6 +1258,128 @@ public class ContentDatabaseTest {
 		assertThrows(ex, () -> db.update(httpClient(), null, UpdateProgress.nop()));
 	}
 
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// 更新中間の難易度表で例外が発生しても後続の難易度表が更新され、全ての難易度表の更新が実施されること
+	@Test
+	public void testUpdate3_UpdateAll() throws Exception {
+		var db = setupUpdateDatabase(r -> {
+			var statusCode = r.uri().toString().equals("http://example.com/1") ? 404 : 200;
+			return new UpdateResponse(statusCode, Map.of());
+		});
+		var results = new HashMap<String, UpdateResult>();
+		results.put("dummy", new UpdateResult(UpdateResult.Type.SUCCESS));
+		db.update(httpClient(), Duration.ofSeconds(1), UpdateProgress.nop(), results);
+		assertEquals(2, results.size());
+		var r1 = results.get(ID_UPDATE1);
+		assertNotNull(r1);
+		assertEquals(UpdateResult.Type.ERROR, r1.getType());
+		assertNotNull(r1.getCause());
+		assertFalse(r1.isSuccess());
+		var r2 = results.get(ID_UPDATE2);
+		assertNotNull(r2);
+		assertEquals(UpdateResult.Type.SUCCESS, r2.getType());
+		assertNull(r2.getCause());
+		assertTrue(r2.isSuccess());
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// 更新中間で割り込みを発生させるとInterruptedExceptionがスローされ、割り込み以降の更新は中止されること
+	@Test
+	public void testUpdate3_Interrupt() throws Exception {
+		var db = setupUpdateDatabase(r -> { Thread.sleep(Long.MAX_VALUE); return null; });
+		var results = new HashMap<String, UpdateResult>();
+		var thrown = new Throwable[] { null };
+		var thread = new Thread(() -> {
+			try {
+				db.update(httpClient(), Duration.ofSeconds(1), UpdateProgress.nop(),results);
+			} catch (Throwable e) {
+				thrown[0] = e;
+			}
+		});
+		thread.start();
+		thread.interrupt();
+		thread.join();
+		assertNotNull(thrown[0]);
+		assertEquals(InterruptedException.class, thrown[0].getClass());
+		assertEquals(2, results.size());
+		var r1 = results.get(ID_UPDATE1);
+		assertNotNull(r1);
+		assertEquals(UpdateResult.Type.ABORT, r1.getType());
+		assertNull(r1.getCause());
+		assertFalse(r1.isSuccess());
+		var r2 = results.get(ID_UPDATE2);
+		assertNotNull(r2);
+		assertEquals(UpdateResult.Type.ABORT, r2.getType());
+		assertNull(r2.getCause());
+		assertFalse(r2.isSuccess());
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// NullPointerException client が null
+	@Test
+	public void testUpdate3_NullClient() throws Exception {
+		var db = setupEmptyDatabase();
+		var ex = NullPointerException.class;
+		assertThrows(ex, () -> db.update(null, Duration.ofSeconds(1), UpdateProgress.nop(), new HashMap<>()));
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// NullPointerException progress が null
+	@Test
+	public void testUpdate3_NullProgress() throws Exception {
+		var db = setupEmptyDatabase();
+		var ex = NullPointerException.class;
+		assertThrows(ex, () -> db.update(httpClient(), Duration.ofSeconds(1), null, new HashMap<>()));
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// NullPointerException results が null
+	@Test
+	public void testUpdate3_NullResults() throws Exception {
+		var db = setupEmptyDatabase();
+		var ex = NullPointerException.class;
+		assertThrows(ex, () -> db.update(httpClient(), Duration.ofSeconds(1), UpdateProgress.nop(), null));
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// UnsupportedOperationException results が変更不可のマップ
+	@Test
+	public void testUpdate3_UnmodifiableResults() throws Exception {
+		var db = setupEmptyDatabase();
+		var ex = UnsupportedOperationException.class;
+		assertThrows(ex, () -> db.update(httpClient(), Duration.ofSeconds(1), UpdateProgress.nop(), Map.of()));
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// IllegalStateException 読み込み排他処理エラーが発生した
+	@Test
+	public void testUpdate3_ReadExclusiveError() throws Exception {
+		var db = setupUpdateDatabase();
+		var lockF = new LockFile(db.getLocation().resolve(readLockFileName()));
+		var ex = IllegalStateException.class;
+		try {
+			assertTrue(lockF.lock());
+			assertThrows(ex, () -> db.update(httpClient(), null, UpdateProgress.nop(), new HashMap<>()));
+		} finally {
+			lockF.unlock();
+		}
+	}
+
+	// update(HttpClient, Duration, UpdateProgress, Map<String, UpdateResult>)
+	// IllegalStateException 書き込み排他処理エラーが発生した
+	@Test
+	public void testUpdate3_WriteExclusiveError() throws Exception {
+		var db = setupUpdateDatabase();
+		var lockF = new LockFile(db.getLocation().resolve(writeLockFileName()));
+		var ex = IllegalStateException.class;
+		try {
+			assertTrue(lockF.lock());
+			assertThrows(ex, () -> db.update(httpClient(), null, UpdateProgress.nop(), new HashMap<>()));
+		} finally {
+			lockF.unlock();
+		}
+	}
+
 	private static String readLockFileName() throws Exception {
 		return Tests.getsf(ContentDatabase.class, "READ_LOCK_FILE_NAME");
 	}
@@ -1275,7 +1398,10 @@ public class ContentDatabaseTest {
 		var writeLockF = location.resolve(writeLockFileName());
 		assertTrue(Files.isDirectory(location));
 		assertTrue(Files.exists(writeLockF));
-		db.all().forEach(cc -> assertEquals(0, cc.getCount()));
+		db.all().forEach(cc -> {
+			assertNull(cc.getLastUpdateDateTime());
+			assertEquals(0, cc.getCount());
+		});
 	}
 
 	private static void assertCommonTestData(ContentDatabase db) throws Exception {

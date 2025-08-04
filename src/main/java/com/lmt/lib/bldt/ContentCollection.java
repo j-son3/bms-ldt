@@ -51,7 +51,6 @@ public class ContentCollection {
 	 * @param dpModifiedDataHash ダブルプレーの楽曲情報元データのハッシュ値
 	 * @param contents 楽曲情報リスト
 	 * @throws NullPointerException tableDesc が null
-	 * @throws NullPointerException lastUpdateDateTime が null
 	 * @throws NullPointerException contents が null
 	 * @throws IllegalArgumentException spModifiedDataHash が文字列のSHA-256の形式ではない
 	 * @throws IllegalArgumentException dpModifiedDataHash が文字列のSHA-256の形式ではない
@@ -61,7 +60,6 @@ public class ContentCollection {
 			ZonedDateTime spModifiedDateTime, String spModifiedDataHash,
 			ZonedDateTime dpModifiedDateTime, String dpModifiedDataHash, Collection<ContentDescription> contents) {
 		assertArgNotNull(tableDesc, "tableDesc");
-		assertArgNotNull(lastUpdateDateTime, "lastUpdateDateTime");
 		assertArg(Objects.isNull(spModifiedDataHash) || Utility.isSha256(spModifiedDataHash),
 				"'spModifiedDataHash' is not valid: %s", spModifiedDataHash);
 		assertArg(Objects.isNull(dpModifiedDataHash) || Utility.isSha256(dpModifiedDataHash),

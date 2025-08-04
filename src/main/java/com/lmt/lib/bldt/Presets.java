@@ -133,6 +133,34 @@ public enum Presets {
 			"https://stellabms.xyz/dpst/score.json",
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")),
 	/**
+	 * Solar難易度表
+	 * @since 0.2.0
+	 */
+	SOLAR(
+			"solar",
+			"https://stellabms.xyz/",
+			new ScoreJsonParser(),
+			"so",
+			"https://stellabms.xyz/so/score.json",
+			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
+			null,
+			null,
+			null),
+	/**
+	 * Supernova難易度表
+	 * @since 0.2.0
+	 */
+	SUPERNOVA(
+			"supernova",
+			"https://stellabms.xyz/",
+			new ScoreJsonParser(),
+			"sn",
+			"https://stellabms.xyz/sn/score.json",
+			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
+			null,
+			null,
+			null),
+	/**
 	 * Overjoy難易度表
 	 * @since 0.1.0
 	 */

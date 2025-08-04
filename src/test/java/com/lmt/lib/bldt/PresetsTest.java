@@ -165,6 +165,42 @@ public class PresetsTest {
 		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"), dp.getLabels());
 	}
 
+	// Solar：難易度表定義が期待通りであること
+	@Test
+	public void testSolar() throws Exception {
+		var preset = Presets.SOLAR;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("solar", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://stellabms.xyz/"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("so", sp.getSymbol());
+		assertEquals(new URL("https://stellabms.xyz/so/score.json"), sp.getContentUrl());
+		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
+		assertNull(dp);
+	}
+
+	// Supernova：難易度表定義が期待通りであること
+	@Test
+	public void testSupernova() throws Exception {
+		var preset = Presets.SUPERNOVA;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("supernova", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://stellabms.xyz/"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("sn", sp.getSymbol());
+		assertEquals(new URL("https://stellabms.xyz/sn/score.json"), sp.getContentUrl());
+		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
+		assertNull(dp);
+	}
+
 	// Overjoy：難易度表定義が期待通りであること
 	@Test
 	public void testOverjoy() throws Exception {

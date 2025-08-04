@@ -52,7 +52,8 @@ public class ContentCollectionTest {
 	// 任意項目に null を指定可、楽曲情報リスト0件が許容されること
 	@Test
 	public void testContentCollection_Optionals() throws Exception {
-		var cc = new ContentCollection(TD, ZDT, null, null, null, null, List.of());
+		var cc = new ContentCollection(TD, null, null, null, null, null, List.of());
+		assertNull(cc.getLastUpdateDateTime());
 		assertNull(cc.getModifiedDateTime(PlayStyle.SINGLE));
 		assertNull(cc.getModifiedDataHash(PlayStyle.SINGLE));
 		assertNull(cc.getModifiedDateTime(PlayStyle.DOUBLE));
@@ -66,14 +67,6 @@ public class ContentCollectionTest {
 	public void testContentCollection_NullTableDesc() throws Exception {
 		var ex = NullPointerException.class;
 		assertThrows(ex, () -> new ContentCollection(null, ZDT, ZDT, HASH, ZDT, HASH, List.of()));
-	}
-
-	// ContentCollection(TableDescription, ZonedDateTime, ZonedDateTime, String, ZonedDateTime, String, Collection<ContentDescription>)
-	// NullPointerException lastUpdateDateTime が null
-	@Test
-	public void testContentCollection_NullLastUpdateDateTime() throws Exception {
-		var ex = NullPointerException.class;
-		assertThrows(ex, () -> new ContentCollection(TD, null, ZDT, HASH, ZDT, HASH, List.of()));
 	}
 
 	// ContentCollection(TableDescription, ZonedDateTime, ZonedDateTime, String, ZonedDateTime, String, Collection<ContentDescription>)

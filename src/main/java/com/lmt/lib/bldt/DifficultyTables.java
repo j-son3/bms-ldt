@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -45,14 +46,14 @@ import picocli.CommandLine.Parameters;
  */
 @Command(name = "BMS Levelize by Difficulty Tables",
 		mixinStandardHelpOptions = true,
-		version = "0.1.1",
+		version = "0.2.0",
 		description = "Update and Show difficulty tables")
 public class DifficultyTables implements Runnable {
 	/**
 	 * LDTライブラリのバージョン
 	 * @since 0.1.0
 	 */
-	public static final String LIBRARY_VERSION = "0.1.1";
+	public static final String LIBRARY_VERSION = "0.2.0";
 	/**
 	 * デフォルトの難易度表データベース格納先パス
 	 * @since 0.1.0
@@ -335,7 +336,7 @@ public class DifficultyTables implements Runnable {
 		if (mId.isEmpty()) {
 			// 全ての難易度表を更新する
 			System.out.println("Update all preset difficulty tables.");
-			db.update(httpClient, DEFAULT_TIMEOUT, UpdateProgress.stdout());
+			db.update(httpClient, DEFAULT_TIMEOUT, UpdateProgress.stdout(), new HashMap<>());
 		} else {
 			// 指定されたIDの難易度表を更新する
 			db.update(httpClient, mId, DEFAULT_TIMEOUT, UpdateProgress.stdout());
