@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.lmt.lib.bldt.parser.GenocideHtmlParser;
 import com.lmt.lib.bldt.parser.ScoreJsonParser;
 
 /**
@@ -25,9 +24,9 @@ public enum Presets {
 	GENOCIDE_NORMAL(
 			"genocide_n",
 			"https://nekokan.dyndns.info/~lobsak/genocide/",
-			new GenocideHtmlParser(),
+			new ScoreJsonParser(),
 			"☆",
-			"https://nekokan.dyndns.info/~lobsak/genocide/normal.html",
+			"https://miraiscarlet.github.io/bms/table/genocide_normal/data_normal.json",
 			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "X"),
 			null,
 			null,
@@ -39,9 +38,9 @@ public enum Presets {
 	GENOCIDE_INSANE(
 			"genocide_i",
 			"https://nekokan.dyndns.info/~lobsak/genocide/",
-			new GenocideHtmlParser(),
+			new ScoreJsonParser(),
 			"★",
-			"https://nekokan.dyndns.info/~lobsak/genocide/insane.html",
+			"https://miraiscarlet.github.io/bms/table/genocide_insane/data_insane.json",
 			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 					"17", "18", "19", "20", "21", "22", "23", "24", "25", "???"),
 			null,
@@ -101,6 +100,20 @@ public enum Presets {
 			"https://rattoto10.github.io/second_table/insane_data.json",
 			List.of("0-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
 					"15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "?"),
+			null,
+			null,
+			null),
+	/**
+	 * Starlight難易度表
+	 * @since 0.3.0
+	 */
+	STARLIGHT(
+			"starlight",
+			"https://stellabms.xyz/",
+			new ScoreJsonParser(),
+			"sr",
+			"https://stellabms.xyz/sr/score.json",
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			null,
 			null,
 			null),

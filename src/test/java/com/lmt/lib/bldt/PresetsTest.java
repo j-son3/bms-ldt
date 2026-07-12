@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.lmt.lib.bldt.parser.GenocideHtmlParser;
 import com.lmt.lib.bldt.parser.ScoreJsonParser;
 
 public class PresetsTest {
@@ -24,9 +23,9 @@ public class PresetsTest {
 		assertEquals("genocide_n", id);
 		assertEquals(id, desc.getId());
 		assertEquals(new URL("https://nekokan.dyndns.info/~lobsak/genocide/"), desc.getOfficialUrl());
-		assertEquals(GenocideHtmlParser.class, desc.getParser().getClass());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
 		assertEquals("☆", sp.getSymbol());
-		assertEquals(new URL("https://nekokan.dyndns.info/~lobsak/genocide/normal.html"), sp.getContentUrl());
+		assertEquals(new URL("https://miraiscarlet.github.io/bms/table/genocide_normal/data_normal.json"), sp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "X"), sp.getLabels());
 		assertNull(dp);
 	}
@@ -42,9 +41,9 @@ public class PresetsTest {
 		assertEquals("genocide_i", id);
 		assertEquals(id, desc.getId());
 		assertEquals(new URL("https://nekokan.dyndns.info/~lobsak/genocide/"), desc.getOfficialUrl());
-		assertEquals(GenocideHtmlParser.class, desc.getParser().getClass());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
 		assertEquals("★", sp.getSymbol());
-		assertEquals(new URL("https://nekokan.dyndns.info/~lobsak/genocide/insane.html"), sp.getContentUrl());
+		assertEquals(new URL("https://miraiscarlet.github.io/bms/table/genocide_insane/data_insane.json"), sp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 				"17", "18", "19", "20", "21", "22", "23", "24", "25", "???"), sp.getLabels());
 		assertNull(dp);
@@ -122,6 +121,24 @@ public class PresetsTest {
 		assertEquals(new URL("https://rattoto10.github.io/second_table/insane_data.json"), sp.getContentUrl());
 		assertEquals(List.of("0-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
 				"15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "?"), sp.getLabels());
+		assertNull(dp);
+	}
+
+	// Starlight：難易度表定義が期待通りであること
+	@Test
+	public void testStarlight() throws Exception {
+		var preset = Presets.STARLIGHT;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("starlight", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://stellabms.xyz/"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("sr", sp.getSymbol());
+		assertEquals(new URL("https://stellabms.xyz/sr/score.json"), sp.getContentUrl());
+		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
 		assertNull(dp);
 	}
 

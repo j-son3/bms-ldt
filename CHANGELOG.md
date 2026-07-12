@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] - 2026-07-13
+### Added
+- Starlight難易度表をサポートしました。(Presets.STARLIGHT)
+
+### Changed
+- GENOCIDE通常/発狂難易度表のデータ取得元を変更しました。
+
 ## [0.2.0] - 2025-08-04
 ### Added
 - Solar難易度表をサポートしました。(Presets.SOLAR)
