@@ -3,6 +3,7 @@ package com.lmt.lib.bldt;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12,14 +13,33 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.lmt.lib.bldt.parser.ScoreJsonParser;
 
 public class DifficultyTablesTest {
+	private static Path sTmpDir;
+	private static Path sDefaultLocation;
 	private Map<String, TableDescription> mOrgTableDescs;
+
+	@BeforeAll
+	public static void beforeAll() throws Exception {
+		AtomicBoolean testing = Tests.getsf(DifficultyTables.class, "TESTING");
+		testing.set(true);
+		sDefaultLocation = ContentDatabase.DEFAULT_LOCATION;
+		sTmpDir = Tests.mktmpdir(ContentDatabaseTest.class);
+	}
+
+	@AfterAll
+	public static void afterAll() throws Exception {
+		AtomicBoolean testing = Tests.getsf(DifficultyTables.class, "TESTING");
+		testing.set(false);
+		Tests.rmtmpdir(ContentDatabaseTest.class);
+	}
 
 	@BeforeEach
 	public void beforeEach() throws Exception {
@@ -123,6 +143,99 @@ public class DifficultyTablesTest {
 		var badId = Presets.GENOCIDE_NORMAL.getId();
 		var d = new TableDescription(badId, "b", new URL("http://a"), new ScoreJsonParser(), sp, null);
 		assertThrows(IllegalArgumentException.class, () -> DifficultyTables.add(d));
+	}
+
+	// guiBrowse(Window, ContentDatabase, GuiOption)
+	// ownerにnull指定が可能であること
+	@Test
+	public void testGuiBrowse_NullableOwner() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			DifficultyTables.guiBrowse(null, new ContentDatabase(), GuiOption.DEFAULT);
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
+	}
+
+	// guiBrowse(Window, ContentDatabase, GuiOption)
+	// NullPointerException dbがnull
+	@Test
+	public void testGuiBrowse_NullDb() throws Exception {
+		assertThrows(NullPointerException.class, () -> DifficultyTables.guiBrowse(null, null, GuiOption.DEFAULT));
+	}
+
+	// guiBrowse(Window, ContentDatabase, GuiOption)
+	// NullPointerException optionがnull
+	@Test
+	public void testGuiBrowse_NullOption() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			var ex = NullPointerException.class;
+			var db = new ContentDatabase();
+			assertThrows(ex, () -> DifficultyTables.guiBrowse(null, db, null));
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
+	}
+
+	// guiUpdate(Window, ContentDatabase, String, GuiOption)
+	// ownerにnull指定が可能であること
+	@Test
+	public void testGuiUpdate_NullableOwner() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			DifficultyTables.guiUpdate(null, new ContentDatabase(), Presets.SATELLITE.getId(), GuiOption.DEFAULT);
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
+	}
+
+	// guiUpdate(Window, ContentDatabase, String, GuiOption)
+	// NullPointerException dbがnull
+	@Test
+	public void testGuiUpdate_NullDb() throws Exception {
+		var ex = NullPointerException.class;
+		assertThrows(ex, () -> DifficultyTables.guiUpdate(null, null, Presets.SATELLITE.getId(), GuiOption.DEFAULT));
+	}
+
+	// guiUpdate(Window, ContentDatabase, String, GuiOption)
+	// NullPointerException optionがnull
+	@Test
+	public void testGuiUpdate_NullOption() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			var ex = NullPointerException.class;
+			var db = new ContentDatabase();
+			assertThrows(ex, () -> DifficultyTables.guiUpdate(null, db, Presets.SATELLITE.getId(), null));
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
+	}
+
+	// guiUpdate(Window, ContentDatabase, String, GuiOption)
+	// targetIdにnull指定が可能であること
+	@Test
+	public void testGuiUpdate_NullableTargetId() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			DifficultyTables.guiUpdate(null, new ContentDatabase(), null, GuiOption.DEFAULT);
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
+	}
+
+	// guiUpdate(Window, ContentDatabase, String, GuiOption)
+	// IllegalArgumentException targetIdに該当する難易度表が存在しない
+	@Test
+	public void testGuiUpdate_TargetIdNotFound() throws Exception {
+		try {
+			ContentDatabase.DEFAULT_LOCATION = sTmpDir;
+			var ex = IllegalArgumentException.class;
+			var db = new ContentDatabase();
+			assertThrows(ex, () -> DifficultyTables.guiUpdate(null, db, "NOT-FOUND", GuiOption.DEFAULT));
+		} finally {
+			ContentDatabase.DEFAULT_LOCATION = sDefaultLocation;
+		}
 	}
 
 	// printLog(String)

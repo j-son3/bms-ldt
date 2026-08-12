@@ -153,18 +153,15 @@ public class ContentDatabase {
 	 * @param id 更新対象の難易度表定義のID
 	 * @param timeout 楽曲情報データダウンロード時のサーバー応答タイムアウト。null の場合タイムアウトなし。
 	 * @param progress 更新処理の進捗情報を報告するハンドラオブジェクト
+	 * @return 指定IDの難易度表の更新結果
 	 * @throws NullPointerException client が null
 	 * @throws NullPointerException id が null
 	 * @throws NullPointerException progress が null
 	 * @throws IllegalArgumentException id に該当する難易度表定義が存在しない
-	 * @throws HttpTimeoutException HTTP通信で接続・応答タイムアウトが発生した
-	 * @throws IOException HTTP通信で送受信エラーが発生した
-	 * @throws InterruptedException スレッド割り込みによる更新処理の中止が発生した
 	 * @throws IllegalStateException 読み書き排他処理エラーが発生した
 	 * @since 0.1.0
 	 */
-	public void update(HttpClient client, String id, Duration timeout, UpdateProgress progress)
-			throws IOException, InterruptedException {
+	public UpdateResult update(HttpClient client, String id, Duration timeout, UpdateProgress progress) {
 		assertArgNotNull(client, "client");
 		assertArgNotNull(id, "id");
 		assertArgNotNull(progress, "progress");
@@ -172,9 +169,17 @@ public class ContentDatabase {
 		var tableDesc = DifficultyTables.get(id);
 		assertArg(Objects.nonNull(tableDesc), "No difficulty table with such ID: %s", id);
 
+		lock(true, true);
 		try {
-			lock(true, true);
+			// 指定された難易度表のみ更新を実行する
 			processUpdate(client, tableDesc, 0, 1, timeout, progress);
+			return new UpdateResult(UpdateResult.Type.SUCCESS);
+		} catch (InterruptedException e) {
+			// スレッド割り込みを検知した場合は未更新分の難易度表の結果を全て「中止」とする
+			return new UpdateResult(UpdateResult.Type.ABORT);
+		} catch (Exception e) {
+			// エラーが発生した場合はその難易度表の結果を「エラー」とする
+			return new UpdateResult(e);
 		} finally {
 			unlock(true, true);
 		}
@@ -602,7 +607,17 @@ public class ContentDatabase {
 
 			// 楽曲情報の元データ取得リクエストを送信する
 			printLog("Waiting response ...");
-			var resp = send(client, reqBuilder.build());
+			var resp = (HttpResponse<InputStream>)null;
+			try {
+				resp = send(client, reqBuilder.build());
+			} catch (IOException e) {
+				// 送受信エラー・タイムアウトの場合はエラー通知を行う
+				progress.publish(tableDesc, playStyle, iDesc, numDesc, UpdateProgress.Status.ERROR);
+				throw e;
+			} catch (InterruptedException e) {
+				// スレッド割り込みの場合は通知は行わずそのままスロー
+				throw e;
+			}
 			var statusCode = resp.statusCode();
 			printLog("Response=%d", statusCode);
 			if (statusCode == HttpURLConnection.HTTP_NOT_MODIFIED) {

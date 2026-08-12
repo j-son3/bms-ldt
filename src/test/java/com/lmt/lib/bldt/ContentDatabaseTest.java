@@ -695,11 +695,11 @@ public class ContentDatabaseTest {
 		assertThrows(NullPointerException.class, () -> db.get(null));
 	}
 
-	// update(HttpClient, String, Duration, UpdateProgress) ※詳細なテストは全難易度表更新版メソッドで実施する
+	// update(HttpClient, String, Duration, UpdateProgress)
 	// 指定したIDに該当する難易度表定義のみ更新が実行されること
 	@Test
 	public void testUpdate1_Normal() throws Exception {
-
+		// Do nothing: 詳細なテストは全難易度表更新版メソッドで実施する
 	}
 
 	// update(HttpClient, String, Duration, UpdateProgress)
@@ -709,7 +709,8 @@ public class ContentDatabaseTest {
 		var db = setupUpdateDatabase((td, ps, raw) -> {
 			return List.of(new ContentDescription("X", "Y", PlayStyle.DOUBLE, 1, null, null, null, null));
 		});
-		db.update(httpClient(), ID_UPDATE2, null, UpdateProgress.nop());
+		var result = db.update(httpClient(), ID_UPDATE2, null, UpdateProgress.nop());
+		assertTrue(result.isSuccess());
 		var cc1 = db.get(ID_UPDATE1);
 		var cc2 = db.get(ID_UPDATE2);
 		assertEquals(2, cc1.getCount());
@@ -758,14 +759,14 @@ public class ContentDatabaseTest {
 	}
 
 	// update(HttpClient, String, Duration, UpdateProgress)
-	// InterruptedException スレッド割り込みによる更新処理の中止が発生した
+	// スレッド割り込みによる更新処理の中止が発生した場合はABORTになること
 	@Test
-	@Timeout(1000)
+	@Timeout(1)
 	public void testUpdate1_Interrupted() throws Exception {
 		var db = setupUpdateDatabase(r -> { Thread.sleep(Long.MAX_VALUE); return null; });
-		var ex = InterruptedException.class;
 		Thread.currentThread().interrupt();
-		assertThrows(ex, () -> db.update(httpClient(), ID_UPDATE1, null, UpdateProgress.nop()));
+		var result = db.update(httpClient(), ID_UPDATE1, null, UpdateProgress.nop());
+		assertEquals(UpdateResult.Type.ABORT, result.getType());
 	}
 
 	// update(HttpClient, String, Duration, UpdateProgress)

@@ -28,6 +28,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://miraiscarlet.github.io/bms/table/genocide_normal/data_normal.json"), sp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "X"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
 	}
 
 	// GENOCIDE発狂：難易度表定義が期待通りであること
@@ -47,6 +48,7 @@ public class PresetsTest {
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 				"17", "18", "19", "20", "21", "22", "23", "24", "25", "???"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
 	}
 
 	// δ通常：難易度表定義が期待通りであること
@@ -66,6 +68,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://deltabms.yaruki0.net/table/data/dpdelta_data.json"), dp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11",
 				"97", "98", "99"), dp.getLabels());
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// δ発狂：難易度表定義が期待通りであること
@@ -84,6 +87,7 @@ public class PresetsTest {
 		assertEquals("★", dp.getSymbol());
 		assertEquals(new URL("https://deltabms.yaruki0.net/table/data/insane_data.json"), dp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "?"), dp.getLabels());
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// NEW GENERATION通常：難易度表定義が期待通りであること
@@ -103,6 +107,7 @@ public class PresetsTest {
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "11+",
 				"12-", "12", "12+", "？"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
 	}
 
 	// NEW GENERATION発狂：難易度表定義が期待通りであること
@@ -122,6 +127,26 @@ public class PresetsTest {
 		assertEquals(List.of("0-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
 				"15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "?"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
+	}
+
+	// Stardust：難易度表定義が期待通りであること
+	@Test
+	public void testStardust() throws Exception {
+		var preset = Presets.STARDUST;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("stardust", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://mqppppp.neocities.org/StardustTable"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("ξ", sp.getSymbol());
+		assertEquals(new URL("https://mqppppp.neocities.org/StardustData.json"), sp.getContentUrl());
+		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "?"), sp.getLabels());
+		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Starlight：難易度表定義が期待通りであること
@@ -140,6 +165,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://stellabms.xyz/sr/score.json"), sp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Satellite：難易度表定義が期待通りであること
@@ -160,6 +186,7 @@ public class PresetsTest {
 		assertEquals("DPsl", dp.getSymbol());
 		assertEquals(new URL("https://stellabms.xyz/dp/score.json"), dp.getContentUrl());
 		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"), dp.getLabels());
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Stella：難易度表定義が期待通りであること
@@ -180,6 +207,7 @@ public class PresetsTest {
 		assertEquals("DPst", dp.getSymbol());
 		assertEquals(new URL("https://stellabms.xyz/dpst/score.json"), dp.getContentUrl());
 		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"), dp.getLabels());
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Solar：難易度表定義が期待通りであること
@@ -198,6 +226,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://stellabms.xyz/so/score.json"), sp.getContentUrl());
 		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Supernova：難易度表定義が期待通りであること
@@ -216,6 +245,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://stellabms.xyz/sn/score.json"), sp.getContentUrl());
 		assertEquals(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// Overjoy：難易度表定義が期待通りであること
@@ -236,6 +266,7 @@ public class PresetsTest {
 		assertEquals("★★", dp.getSymbol());
 		assertEquals(new URL("http://ereter.net/static/analyzer/json/overjoy.json"), dp.getContentUrl());
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "99"), dp.getLabels());
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
 	}
 
 	// LN：難易度表定義が期待通りであること
@@ -255,6 +286,47 @@ public class PresetsTest {
 		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
 				"17", "18", "19", "20", "21", "22", "23", "24", "25", "26"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
+	}
+
+	// Luminous：難易度表定義が期待通りであること
+	@Test
+	public void testLuminous() throws Exception {
+		var preset = Presets.LUMINOUS;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("luminous", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("https://ladymade-star.github.io/luminous/"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("ln", sp.getSymbol());
+		assertEquals(new URL("https://script.google.com/macros/s/AKfycbw1BLjiGiOwjmbsZyJFG3FvxmfXWlrb5QkanYM_g2Dvgvp-lGcqWGoCZG2rXniQzL-X3A/exec?status=main"), sp.getContentUrl());
+		assertEquals(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
+				"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "99"), sp.getLabels());
+		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
+	}
+
+	// 皿難易度表(3rd)：難易度表定義が期待通りであること
+	@Test
+	public void testScratch3() throws Exception {
+		var preset = Presets.SCRATCH_3RD;
+		var id = preset.getId();
+		var desc = preset.getTableDescription();
+		var sp = desc.getSingleDescription();
+		var dp = desc.getDoubleDescription();
+		assertEquals("scratch3", id);
+		assertEquals(id, desc.getId());
+		assertEquals(new URL("http://minddnim.web.fc2.com/"), desc.getOfficialUrl());
+		assertEquals(ScoreJsonParser.class, desc.getParser().getClass());
+		assertEquals("◎", sp.getSymbol());
+		assertEquals(new URL("http://minddnim.web.fc2.com/sara/3rd_hard/json/data.json"), sp.getContentUrl());
+		assertEquals(List.of("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+				"13", "14", "15", "16"), sp.getLabels());
+		assertNull(dp);
+		assertEquals(TableStatus.FROZEN, desc.getStatus());
 	}
 
 	// Scramble：難易度表定義が期待通りであること
@@ -273,6 +345,7 @@ public class PresetsTest {
 		assertEquals(new URL("https://script.google.com/macros/s/AKfycbw5pnMwlCFZz7wDY5kRsBpfSm0-luKszs8LQAEE6BKkVT1R78-CpB4WA9chW-gdBsF7IA/exec"), sp.getContentUrl());
 		assertEquals(List.of("-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 
 	// 癖譜面ライブラリー：難易度表定義が期待通りであること
@@ -293,5 +366,6 @@ public class PresetsTest {
 				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "51",
 				"52", "53", "54", "55", "56", "99"), sp.getLabels());
 		assertNull(dp);
+		assertEquals(TableStatus.ACTIVE, desc.getStatus());
 	}
 }

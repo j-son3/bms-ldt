@@ -2,6 +2,9 @@ package com.lmt.lib.bldt;
 
 import static com.lmt.lib.bldt.internal.Assertion.*;
 
+import java.awt.Window;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.nio.file.Path;
@@ -12,13 +15,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.lmt.lib.bldt.internal.Texts;
+import com.lmt.lib.bldt.internal.gui.BrowseDialog;
+import com.lmt.lib.bldt.internal.gui.UpdateDialog;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -46,19 +54,22 @@ import picocli.CommandLine.Parameters;
  */
 @Command(name = "BMS Levelize by Difficulty Tables",
 		mixinStandardHelpOptions = true,
-		version = "0.3.0",
+		version = "0.4.0",
 		description = "Update and Show difficulty tables")
 public class DifficultyTables implements Runnable {
 	/**
 	 * LDTライブラリのバージョン
 	 * @since 0.1.0
 	 */
-	public static final String LIBRARY_VERSION = "0.3.0";
+	public static final String LIBRARY_VERSION = "0.4.0";
 	/**
 	 * デフォルトの難易度表データベース格納先パス
 	 * @since 0.1.0
 	 */
 	public static final Path DEFAULT_LOCATION = Path.of(System.getProperty("user.home"), ".com.lmt", "bldt");
+
+	/** テスト中かどうか */
+	private static final AtomicBoolean TESTING = new AtomicBoolean(false);
 
 	/** 動作モード：難易度表更新 */
 	private static final String MODE_UPDATE = "update";
@@ -66,6 +77,8 @@ public class DifficultyTables implements Runnable {
 	private static final String MODE_SHOW = "show";
 	/** 動作モード：難易度表定義出力 */
 	private static final String MODE_PRESETS = "presets";
+	/** 動作モード：難易度表ツール表示 */
+	private static final String MODE_BROWSE = "browse";
 	/** デフォルトの接続・応答タイムアウト */
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(60);
 	/** 文字列リソースの名前 */
@@ -83,7 +96,7 @@ public class DifficultyTables implements Runnable {
 			index = "0",
 			arity = "1",
 			paramLabel = "MODE",
-			description = "Operation mode. \"update\", \"show\" or \"presets\".")
+			description = "Operation mode. \"update\", \"show\", \"presets\" or \"browse\".")
 	private String mMode;
 	/** ID */
 	@Option(names = { "-t", "--target-id" },
@@ -151,6 +164,83 @@ public class DifficultyTables implements Runnable {
 	}
 
 	/**
+	 * 「難易度表ツール」を表示します。
+	 * <p>難易度表ツールは難易度表の一覧とその検索、公式サイトへのリンクや難易度表更新のトリガーが可能な
+	 * Swingベースの画面です。当メソッドを実行すると、ownerで示すウィンドウを親ウィンドウとしたモーダルダイアログで
+	 * 画面が表示され、その画面が閉じられるまで制御を返しません。</p>
+	 * <p>難易度表ツールは db で指定した難易度表データベースを表示・更新の対象とします。
+	 * 難易度表更新を行った場合、難易度表データベース読み込み元のデータファイルが更新され、メモリ上のデータベースも
+	 * 更新後の内容に書き換えられます。</p>
+	 * <p>難易度表ツールの動作仕様の制御やイベント通知等は {@link GuiOption} を通じてある程度可能です。
+	 * 詳細はそちらを参照してください。ライブラリが定義するデフォルトの動作としたい場合は
+	 * {@link GuiOption#DEFAULT} を指定してください。この値に null を指定することはできません。</p>
+	 * @param owner 難易度表ツール画面の親ウィンドウ、またはnull
+	 * @param db 表示・更新対象となる難易度表データベース
+	 * @param option 難易度表ツールの動作オプション
+	 * @throws NullPointerException dbがnull
+	 * @throws NullPointerException optionがnull
+	 * @since 0.4.0
+	 */
+	public static void guiBrowse(Window owner, ContentDatabase db, GuiOption option) {
+		assertArgNotNull(db, "db");
+		assertArgNotNull(option, "option");
+		if (!TESTING.get()) {
+			var browse = new BrowseDialog(owner);
+			browse.setDatabase(db);
+			browse.setOption(option);
+			browse.setLocationRelativeTo(owner);
+			browse.setVisible(true);
+		}
+	}
+
+	/**
+	 * 難易度表更新を行う画面を表示し、難易度表の更新を実行します。
+	 * <p>難易度表更新画面は指定したIDの難易度表の更新を行い、更新結果を表示するSwingベースの画面です。
+	 * 当メソッドを実行すると、ownerで示すウィンドウを親ウィンドウとしたモーダルダイアログで画面が表示され、
+	 * その画面が閉じられるまで制御を返しません。</p>
+	 * <p>難易度表ツールは db で指定した難易度表データベースを更新の対象とします。
+	 * 難易度表更新を行った場合、難易度表データベース読み込み元のデータファイルが更新され、メモリ上のデータベースも
+	 * 更新後の内容に書き換えられます。</p>
+	 * <p>更新対象の難易度表は targetId で指定します。この値に null を指定すると全ての難易度表を更新対象とします。
+	 * 「全ての難易度表」とは {@link #all()} で取得できる難易度表のことを指します。</p>
+	 * <p>難易度表ツールの動作仕様の制御やイベント通知等は {@link GuiOption} を通じてある程度可能です。
+	 * 詳細はそちらを参照してください。ライブラリが定義するデフォルトの動作としたい場合は
+	 * {@link GuiOption#DEFAULT} を指定してください。この値に null を指定することはできません。</p>
+	 * @param owner 難易度表更新画面の親ウィンドウ、またはnull
+	 * @param db 更新対象となる難易度表データベース
+	 * @param targetId 更新対象の難易度表ID、またはnull
+	 * @param option 難易度表更新画面の動作オプション
+	 * @throws NullPointerException dbがnull
+	 * @throws NullPointerException optionがnull
+	 * @throws IllegalArgumentException targetIdに該当する難易度表が存在しない
+	 * @since 0.4.0
+	 */
+	public static void guiUpdate(Window owner, ContentDatabase db, String targetId, GuiOption option) {
+		assertArgNotNull(db, "db");
+		assertArgNotNull(option, "option");
+
+		var descs = (List<TableDescription>)null;
+		if (Objects.isNull(targetId)) {
+			// 更新対象未指定の場合は全難易度表を対象にする
+			descs = all().collect(Collectors.toUnmodifiableList());
+		} else {
+			// 更新対象が指定されている場合はその難易度表のみを対象とする
+			var tableDesc = DifficultyTables.get(targetId);
+			assertArg(Objects.nonNull(tableDesc), "No difficulty table with such ID: %s", targetId);
+			descs = List.of(tableDesc);
+		}
+
+		if (!TESTING.get()) {
+			var update = new UpdateDialog(owner);
+			update.setDatabase(db);
+			update.setUpdateTarget(descs);
+			update.setOption(option);
+			update.setLocationRelativeTo(owner);
+			update.setVisible(true);
+		}
+	}
+
+	/**
 	 * デバッグログを出力します。
 	 * <p>当メソッドで出力したデバッグログは {@link #setLogger(Consumer)} でロガー関数が登録されている時に出力されます。
 	 * デバッグログは当ライブラリの内部動作および {@link Parser} を実装したパーサの内部動作を確認する目的で使用します。
@@ -203,9 +293,13 @@ public class DifficultyTables implements Runnable {
 	 */
 	public static void setLocale(Locale locale) {
 		assertArgNotNull(locale, "locale");
-		var bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
+		try {
+			Texts.setup(BUNDLE_NAME, locale);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for (var tableDesc : sTableDescs.values()) {
-			var name = bundle.getString(tableDesc.getId() + ".name");
+			var name = Texts.get(tableDesc.getId() + ".name");
 			tableDesc.setName(name);
 		}
 	}
@@ -220,6 +314,7 @@ public class DifficultyTables implements Runnable {
 	 * <li>update: {@link Presets} に定義されたプリセット難易度表の更新機能(インターネット接続が必要です)</li>
 	 * <li>show: {@link Presets} に定義されたプリセット難易度表の楽曲情報一覧出力</li>
 	 * <li>presets: {@link Presets} に定義されたプリセット難易度表の定義内容一覧出力</li>
+	 * <li>browse: 難易度表ツールの表示</li>
 	 * </ul>
 	 * <p>CLI機能の動作オプションは以下の通りです。</p>
 	 * <p><strong>-l, --location</strong></p>
@@ -247,7 +342,10 @@ public class DifficultyTables implements Runnable {
 	 * java -jar bms-ldt-x.x.x.jar show -t satellite
 	 *
 	 * 難易度表の定義内容を出力する
-	 * java -jar bms-ldt-x.x.x.jar presets</pre>
+	 * java -jar bms-ldt-x.x.x.jar presets
+	 *
+	 * 難易度表ツールを表示する
+	 * java -jar bms-ldt-x.x.x.jar browse</pre>
 	 * @param args コマンドライン引数
 	 * @since 0.1.0
 	 */
@@ -283,6 +381,10 @@ public class DifficultyTables implements Runnable {
 			} else if (mMode.equals(MODE_PRESETS)) {
 				// プリセット難易度表定義出力モード
 				presets();
+				System.exit(0);
+			} else if (mMode.equals(MODE_BROWSE)) {
+				// 難易度表ツール表示モード
+				browse();
 				System.exit(0);
 			} else {
 				// 不明なモード
@@ -414,6 +516,39 @@ public class DifficultyTables implements Runnable {
 			System.out.printf("DP : %s\n", Objects.nonNull(tableDesc.getDoubleDescription()) ? "Enable" : "Disable");
 			System.out.println();
 		}
+	}
+
+	/**
+	 * 難易度表ツール表示処理
+	 * @throws Exception 何らかのエラーが発生した
+	 */
+	private void browse() throws Exception {
+		guiBrowse(null, new ContentDatabase(), new GuiOption() {
+			@Override
+			public boolean supportOfficialSite() {
+				return true;
+			}
+
+			@Override
+			public boolean supportUpdate() {
+				return true;
+			}
+
+			@Override
+			public boolean supportShowLog() {
+				return false;
+			}
+
+			@Override
+			public OutputStream openLog() throws IOException {
+				return System.out;
+			}
+
+			@Override
+			public void closeLog(OutputStream logStream) throws IOException {
+				// Do nothing
+			}
+		});
 	}
 
 	/**

@@ -38,6 +38,7 @@ public class TableDescriptionTest {
 		assertEquals(GenocideHtmlParser.class, d.getParser().getClass());
 		assertSame(sp, d.getSingleDescription());
 		assertSame(dp, d.getDoubleDescription());
+		assertEquals(TableStatus.UNKNOWN, d.getStatus());
 	}
 
 	// TableDescription(String, String, URL, Parser, PlayStyleDescription, PlayStyleDescription)
@@ -190,15 +191,9 @@ public class TableDescriptionTest {
 		// Do nothing: コンストラクタで確認済み
 	}
 
-	// isPreset()
-	// 正しい値を返すこと
+	// getStatus()
 	@Test
-	public void testIsPreset() throws Exception {
-		var sp = new PlayStyleDescription("s", new URL("http://example.com/sp/"), List.of("1s"));
-		var d = new TableDescription("a", "b", new URL("http://a"), EMPTY_PARSER, sp, null);
-		d.setIsPreset(false);
-		assertFalse(d.isPreset());
-		d.setIsPreset(true);
-		assertTrue(d.isPreset());
+	public void testGetStatus() {
+		// Do nothing: コンストラクタで確認済み
 	}
 }

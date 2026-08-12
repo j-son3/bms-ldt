@@ -26,6 +26,8 @@ public class TableDescription {
 	private Parser mParser;
 	/** プレースタイル定義 */
 	private PlayStyleDescription[] mStyleDescs = new PlayStyleDescription[PlayStyle.COUNT];
+	/** 難易度表状態 */
+	private TableStatus mStatus;
 	/** ライブラリ標準の難易度表かどうか */
 	private boolean mIsPreset;
 
@@ -50,6 +52,26 @@ public class TableDescription {
 	 */
 	public TableDescription(String id, String name, URL officialUrl, Parser parser, PlayStyleDescription spDesc,
 			PlayStyleDescription dpDesc) {
+		this(id, name, officialUrl, parser, spDesc, dpDesc, TableStatus.UNKNOWN, false);
+	}
+
+	/**
+	 * 内部処理用コンストラクタ
+	 * @param id ID
+	 * @param name 難易度表名称
+	 * @param officialUrl 公式URL
+	 * @param parser 元データ解析用のパーサオブジェクト
+	 * @param spDesc シングルプレーのプレースタイル定義
+	 * @param dpDesc ダブルプレーのプレースタイル定義
+	 * @param status 難易度表状態
+	 * @param isPreset プリセットかどうか
+	 * @throws NullPointerException ID, 難易度表名称, 公式URL, 元データ解析用のパーサオブジェクトのいずれかがnull
+	 * @throws IllegalArgumentException IDの形式が不正
+	 * @throws IllegalArgumentException 難易度表名称が空文字列
+	 * @throws IllegalArgumentException プレースタイル定義が全てnull
+	 */
+	TableDescription(String id, String name, URL officialUrl, Parser parser, PlayStyleDescription spDesc,
+			PlayStyleDescription dpDesc, TableStatus status, boolean isPreset) {
 		assertArgNotNull(id, "id");
 		assertArg(Utility.isIdValid(id), "'id' is not valid: %s", id);
 		assertArgNotNull(name, "name");
@@ -63,7 +85,8 @@ public class TableDescription {
 		mParser = parser;
 		mStyleDescs[PlayStyle.SINGLE.ordinal()] = spDesc;
 		mStyleDescs[PlayStyle.DOUBLE.ordinal()] = dpDesc;
-		mIsPreset = false;
+		mStatus = status;
+		mIsPreset = isPreset;
 	}
 
 	/**
@@ -141,19 +164,20 @@ public class TableDescription {
 	}
 
 	/**
+	 * この難易度表の状態を取得します。
+	 * @return 難易度表の状態
+	 * @since 0.4.0
+	 */
+	public TableStatus getStatus() {
+		return mStatus;
+	}
+
+	/**
 	 * この難易度表定義がライブラリ標準の定義かどうかを取得します。
 	 * @return ライブラリ標準の難易度表定義の場合 true
 	 * @since 0.1.0
 	 */
 	public boolean isPreset() {
 		return mIsPreset;
-	}
-
-	/**
-	 * ライブラリ標準の難易度表定義かどうかを設定
-	 * @param isPreset ライブラリ標準の難易度表定義かどうか
-	 */
-	void setIsPreset(boolean isPreset) {
-		mIsPreset = isPreset;
 	}
 }

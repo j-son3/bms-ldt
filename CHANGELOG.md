@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2026-08-12
+### Added
+- Stardust難易度表をサポートしました。(Presets.STARDUST)
+- Luminous難易度表をサポートしました。(Presets.LUMINOUS)
+- 皿難易度表(3rd)をサポートしました。(Presets.SCRATCH_3RD)
+- 難易度表の状態を取得する TableDescription#getStatus を追加しました。
+- BMS Analysis v1.0.0 に搭載された難易度表ツールを当ライブラリに移植しました。それに伴い、以下の機能追加を行いました。
+    - 難易度表ツールを表示する DifficultyTables#guiBrowse を追加しました。
+    - 難易度表更新画面を表示する DifficultyTables#guiUpdate を追加しました。
+    - DifficultyTables#main の動作モードに browse を追加しました。
+
+### Changed
+- ContentDatabase#update(HttpClient, String, Duration, UpdateProgress) の戻り値を void から UpdateResult に変更しました。
+
+### Fixed
+- 難易度表更新時、楽曲情報の元データ取得リクエスト送信でエラー・タイムアウトが発生した時にプログレス通知されない不具合を修正しました。
+
 ## [0.3.0] - 2026-07-13
 ### Added
 - Starlight難易度表をサポートしました。(Presets.STARLIGHT)

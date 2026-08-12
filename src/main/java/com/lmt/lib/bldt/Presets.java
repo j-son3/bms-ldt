@@ -30,7 +30,8 @@ public enum Presets {
 			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "X"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.FROZEN),
 	/**
 	 * GENOCIDE 発狂難易度表
 	 * @since 0.1.0
@@ -45,7 +46,8 @@ public enum Presets {
 					"17", "18", "19", "20", "21", "22", "23", "24", "25", "???"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.FROZEN),
 	/**
 	 * δ 通常難易度表
 	 * @since 0.1.0
@@ -59,7 +61,8 @@ public enum Presets {
 			null,
 			"δ",
 			"https://deltabms.yaruki0.net/table/data/dpdelta_data.json",
-			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "97", "98", "99")),
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "97", "98", "99"),
+			TableStatus.ACTIVE),
 	/**
 	 * δ 発狂難易度表
 	 * @since 0.1.0
@@ -73,7 +76,8 @@ public enum Presets {
 			null,
 			"★",
 			"https://deltabms.yaruki0.net/table/data/insane_data.json",
-			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "?")),
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "?"),
+			TableStatus.ACTIVE),
 	/**
 	 * NEW GENERATION 通常難易度表
 	 * @since 0.1.0
@@ -87,7 +91,8 @@ public enum Presets {
 			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "11+", "12-", "12", "12+", "？"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.FROZEN),
 	/**
 	 * NEW GENERATION 発狂難易度表
 	 * @since 0.1.0
@@ -102,7 +107,23 @@ public enum Presets {
 					"15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "?"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.FROZEN),
+	/**
+	 * Stardust難易度表
+	 * @since 0.4.0
+	 */
+	STARDUST(
+			"stardust",
+			"https://mqppppp.neocities.org/StardustTable",
+			new ScoreJsonParser(),
+			"ξ",
+			"https://mqppppp.neocities.org/StardustData.json",
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "?"),
+			null,
+			null,
+			null,
+			TableStatus.ACTIVE),
 	/**
 	 * Starlight難易度表
 	 * @since 0.3.0
@@ -116,7 +137,8 @@ public enum Presets {
 			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.ACTIVE),
 	/**
 	 * Satellite難易度表
 	 * @since 0.1.0
@@ -130,7 +152,8 @@ public enum Presets {
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			"DPsl",
 			"https://stellabms.xyz/dp/score.json",
-			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")),
+			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+			TableStatus.ACTIVE),
 	/**
 	 * Stella難易度表
 	 * @since 0.1.0
@@ -144,7 +167,8 @@ public enum Presets {
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			"DPst",
 			"https://stellabms.xyz/dpst/score.json",
-			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")),
+			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+			TableStatus.ACTIVE),
 	/**
 	 * Solar難易度表
 	 * @since 0.2.0
@@ -158,7 +182,8 @@ public enum Presets {
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.ACTIVE),
 	/**
 	 * Supernova難易度表
 	 * @since 0.2.0
@@ -172,7 +197,8 @@ public enum Presets {
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.ACTIVE),
 	/**
 	 * Overjoy難易度表
 	 * @since 0.1.0
@@ -186,7 +212,8 @@ public enum Presets {
 			List.of("0", "1", "2", "3", "4", "5", "6", "7", "8"),
 			"★★",
 			"http://ereter.net/static/analyzer/json/overjoy.json",
-			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "99")),
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "99"),
+			TableStatus.FROZEN),
 	/**
 	 * LN難易度表
 	 * @since 0.1.0
@@ -201,7 +228,39 @@ public enum Presets {
 					"17", "18", "19", "20", "21", "22", "23", "24", "25", "26"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.FROZEN),
+	/**
+	 * Luminous難易度表
+	 * @since 0.4.0
+	 */
+	LUMINOUS(
+			"luminous",
+			"https://ladymade-star.github.io/luminous/",
+			new ScoreJsonParser(),
+			"ln",
+			"https://script.google.com/macros/s/AKfycbw1BLjiGiOwjmbsZyJFG3FvxmfXWlrb5QkanYM_g2Dvgvp-lGcqWGoCZG2rXniQzL-X3A/exec?status=main",
+			List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16",
+					"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "99"),
+			null,
+			null,
+			null,
+			TableStatus.ACTIVE),
+	/**
+	 * 皿難易度表(3rd)
+	 * @since 0.4.0
+	 */
+	SCRATCH_3RD(
+			"scratch3",
+			"http://minddnim.web.fc2.com/",
+			new ScoreJsonParser(),
+			"◎",
+			"http://minddnim.web.fc2.com/sara/3rd_hard/json/data.json",
+			List.of("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"),
+			null,
+			null,
+			null,
+			TableStatus.FROZEN),
 	/**
 	 * Scramble難易度表
 	 * @since 0.1.0
@@ -215,7 +274,8 @@ public enum Presets {
 			List.of("-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
 			null,
 			null,
-			null),
+			null,
+			TableStatus.ACTIVE),
 	/**
 	 * 癖譜面ライブラリー
 	 * @since 0.1.1
@@ -232,7 +292,8 @@ public enum Presets {
 					"30", "31", "51", "52", "53", "54", "55", "56", "99"),
 			null,
 			null,
-			null);
+			null,
+			TableStatus.ACTIVE);
 
 	/** 難易度表定義 */
 	private TableDescription mTableDesc;
@@ -248,10 +309,12 @@ public enum Presets {
 	 * @param dpSymbol ダブルプレーの記号
 	 * @param dpContentUrl ダブルプレーの楽曲情報URL
 	 * @param dpLabels ダブルプレーの難易度ラベルリスト
+	 * @param status 難易度表の状態
 	 */
 	private Presets(String id, String officialUrl, Parser parser,
 			String spSymbol, String spContentUrl, Collection<String> spLabels,
-			String dpSymbol, String dpContentUrl, Collection<String> dpLabels) {
+			String dpSymbol, String dpContentUrl, Collection<String> dpLabels,
+			TableStatus status) {
 		try {
 			var spDesc = (PlayStyleDescription)null;
 			if (Objects.nonNull(spSymbol)) {
@@ -261,8 +324,7 @@ public enum Presets {
 			if (Objects.nonNull(dpSymbol)) {
 				dpDesc = new PlayStyleDescription(dpSymbol, new URL(dpContentUrl), dpLabels);
 			}
-			mTableDesc = new TableDescription(id, id, new URL(officialUrl), parser, spDesc, dpDesc);
-			mTableDesc.setIsPreset(true);
+			mTableDesc = new TableDescription(id, id, new URL(officialUrl), parser, spDesc, dpDesc, status, true);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
