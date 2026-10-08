@@ -32,7 +32,7 @@ mvn clean install -DskipTests
 <dependency>
     <groupId>com.lmt</groupId>
     <artifactId>bms-ldt</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 

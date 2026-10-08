@@ -54,14 +54,14 @@ import picocli.CommandLine.Parameters;
  */
 @Command(name = "BMS Levelize by Difficulty Tables",
 		mixinStandardHelpOptions = true,
-		version = "0.4.0",
+		version = "0.4.1",
 		description = "Update and Show difficulty tables")
 public class DifficultyTables implements Runnable {
 	/**
 	 * LDTライブラリのバージョン
 	 * @since 0.1.0
 	 */
-	public static final String LIBRARY_VERSION = "0.4.0";
+	public static final String LIBRARY_VERSION = "0.4.1";
 	/**
 	 * デフォルトの難易度表データベース格納先パス
 	 * @since 0.1.0
@@ -186,6 +186,7 @@ public class DifficultyTables implements Runnable {
 		assertArgNotNull(option, "option");
 		if (!TESTING.get()) {
 			var browse = new BrowseDialog(owner);
+			browse.setAlwaysOnTop(Objects.nonNull(owner) ? owner.isAlwaysOnTop() : false);
 			browse.setDatabase(db);
 			browse.setOption(option);
 			browse.setLocationRelativeTo(owner);

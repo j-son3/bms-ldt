@@ -295,6 +295,7 @@ public class BrowseDialog extends JDialog {
 			if (confirm == JOptionPane.YES_OPTION) {
 				var desc = ((DescriptionItem)mDescCombo.getSelectedItem()).desc;
 				var update = new UpdateDialog();
+				update.setAlwaysOnTop(BrowseDialog.this.isAlwaysOnTop());
 				update.setLocationRelativeTo(BrowseDialog.this);
 				update.setDatabase(mCtrl.mDb);
 				update.setUpdateTarget(Objects.isNull(desc) ? mDescs : List.of(desc));
